@@ -1,3 +1,4 @@
+// Function for count the Number of matches played per year for all the years in IPL.
 function numberOfMatchesPerYear(matches) {
     let result = {};
     for (let index = 0; index < matches.length; index += 1) {
@@ -10,12 +11,13 @@ function numberOfMatchesPerYear(matches) {
     return result;
 }
 
+//Function for count the Number of matches won per team per year in IPL.
 function numberOfMatchesWonPerTeamPerYear(matches) {
     let result = {};
     let matchesWonPerTeam = {};
     for (let index = 0; index < matches.length; index += 1) {
-        if (matches[index].season in result) {
-            if (matches[index].winner in matchesWonPerTeam){
+        if (matches[index].season in result) {  
+            if (matches[index].winner in matchesWonPerTeam){ 
                 matchesWonPerTeam[matches[index].winner] += 1;
             }
             else{
@@ -31,6 +33,7 @@ function numberOfMatchesWonPerTeamPerYear(matches) {
     return result;
 }
 
+//Function for count the Extra runs conceded per team in the year 2016
 function extraRunConcededPerTeamIn2016(matches, deliveries){
     let result = {};
     let id = 0;
@@ -52,6 +55,7 @@ function extraRunConcededPerTeamIn2016(matches, deliveries){
     return result;
 }
 
+//Function for get the Top 10 economical bowlers in the year 2015
 function top10EconomicalBowlersIn2015(matches, deliveries){
     let result = [];
     let bowlersEconomy = {};

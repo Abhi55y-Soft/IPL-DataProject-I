@@ -8,10 +8,10 @@ const matches = [];
 const deliveries = [];
 
 fs.createReadStream('/home/abhishek/temp/IPL_DataProject_I/src/data/matches.csv')
-    .pipe(csv({}))
-    .on('data', (data) => matches.push(data))
+    .pipe(csv({}))  //pipe it with csv-parser to parse the data as object
+    .on('data', (data) => matches.push(data))   //pushung the object data into array to make it array of object   
     .on('end', () => {
-        fs.createReadStream('/home/abhishek/temp/IPL_DataProject_I/src/data/deliveries.csv')
+        fs.createReadStream('/home/abhishek/temp/IPL_DataProject_I/src/data/deliveries.csv') // nesting readstrem for the both CSV files to read and use the data to perform operations 
             .pipe(csv({}))
             .on('data', (data) => deliveries.push(data))
             .on('end', () => {
@@ -20,6 +20,7 @@ fs.createReadStream('/home/abhishek/temp/IPL_DataProject_I/src/data/matches.csv'
                 const extraRunPerTeamIn2016 = extraRunConcededPerTeamIn2016(matches, deliveries);
                 const topEconomicalBowlersIn2015 = top10EconomicalBowlersIn2015(matches, deliveries);
                 
+                // this function dum data resultent data of function into JSON file
                 function dumpData(data, file){
                     const finished = (error) => {
                         if (error){
