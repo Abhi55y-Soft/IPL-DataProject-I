@@ -20,4 +20,9 @@ $ npm start
 
 The data is dumped into the output folder as separate JSON files.
 
-See the JSON file in the output folder for the result.
+See the JSON files in the output folder for the result.
+
+- mathcesPerYear.json file contains the number of matches played in each Year.
+- matchesWonPerTeamPerYear.json file contains the number of matches won by each team in each Year.
+- extraRunPerTeamIn2016.json file contains the number of extra runs conceded by each team in year 2016.
+- topEconomicalBowlersIn2015.json file contains top Economical Bowlers who conceded fewer runs in year 2015.
