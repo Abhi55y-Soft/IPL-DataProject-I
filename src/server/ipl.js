@@ -59,7 +59,7 @@ function extraRunConcededPerTeamIn2016(matches, deliveries){
 function top10EconomicalBowlersIn2015(matches, deliveries){
     let result = [];
     let bowlersRuns = {};
-    let bowlersOvers = {};
+    let bowlersNumberOfDeliveries = {};
     let id = 0;
     let count = 0;
     for (let index = 0; index < matches.length; index += 1){
@@ -74,17 +74,19 @@ function top10EconomicalBowlersIn2015(matches, deliveries){
                 else{
                     bowlersRuns[deliveries[innerIndex].bowler] = Number(deliveries[innerIndex].total_runs);
                 }
-                if (deliveries[innerIndex].bowler in bowlersOvers){
-                    bowlersOvers[deliveries[innerIndex].bowler] += 1;
+                if (deliveries[innerIndex].bowler in bowlersNumberOfDeliveries && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
+                    bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] += 1;
+                    flag = false;
                 }
-                else{
-                    bowlersOvers[deliveries[innerIndex].bowler] = 1;
+                else if(!(deliveries[innerIndex].bowler in bowlersNumberOfDeliveries) && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
+                    bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] = 1;
+
                 }
             }
         }
     }
     for (let name in bowlersRuns){
-        bowlersRuns[name] = bowlersRuns[name]/bowlersOvers;
+        bowlersRuns[name] = ((bowlersRuns[name]) / (bowlersNumberOfDeliveries[name] / 6).toFixed(2));    // bowlersNumberOfDeliveries[name] / 6 calculate number of overs
     }
     let sortedBowlersEconomy = Object.entries(bowlersRuns).sort((a,b) => a[1]-b[1]);
     sortedBowlersEconomy = Object.fromEntries(sortedBowlersEconomy);
