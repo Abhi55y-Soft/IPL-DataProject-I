@@ -76,7 +76,6 @@ function top10EconomicalBowlersIn2015(matches, deliveries){
                 }
                 if (deliveries[innerIndex].bowler in bowlersNumberOfDeliveries && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
                     bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] += 1;
-                    flag = false;
                 }
                 else if(!(deliveries[innerIndex].bowler in bowlersNumberOfDeliveries) && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
                     bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] = 1;
