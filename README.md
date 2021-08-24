@@ -25,4 +25,4 @@ See the JSON files in the output folder for the result.
 - mathcesPerYear.json file contains the number of matches played in each Year.
 - matchesWonPerTeamPerYear.json file contains the number of matches won by each team in each Year.
 - extraRunPerTeamIn2016.json file contains the number of extra runs conceded by each team in year 2016.
-- topEconomicalBowlersIn2015.json file contains top Economical Bowlers who conceded fewer runs in year 2015.
+- topEconomicalBowlersIn2015.json file contains top Economical Bowlers by the formula (total number of runs conceded by bowler / total number of overs bowl by bowler) in year 2015.
