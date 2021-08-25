@@ -1,13 +1,14 @@
 // Function for count the Number of matches played per year for all the years in IPL.
 function numberOfMatchesPerYear(matches) {
     let result = {};
-    for (let index = 0; index < matches.length; index += 1) {
-        if (matches[index].season in result) {
-            result[matches[index].season] += 1;
-        } else {
-            result[matches[index].season] = 1;
+    matches.forEach(element => {
+        if (element.season in result){
+            result[element.season] += 1;
         }
-    }
+        else{
+            result[element.season] = 1;
+        }
+    });
     return result;
 }
 
@@ -15,43 +16,40 @@ function numberOfMatchesPerYear(matches) {
 function numberOfMatchesWonPerTeamPerYear(matches) {
     let result = {};
     let matchesWonPerTeam = {};
-    for (let index = 0; index < matches.length; index += 1) {
-        if (matches[index].season in result) {  
-            if (matches[index].winner in matchesWonPerTeam){ 
-                matchesWonPerTeam[matches[index].winner] += 1;
+    matches.forEach(element => {
+        if (element.season in result){
+            if (element.winner in matchesWonPerTeam){
+                matchesWonPerTeam[element.winner] += 1;
             }
             else{
-                matchesWonPerTeam[matches[index].winner] = 1;
+                matchesWonPerTeam[element.winner] = 1;
             }
-            result[matches[index].season] = matchesWonPerTeam;
+            result[element.season] = matchesWonPerTeam;
         }
-        else {
+        else{
             matchesWonPerTeam = {};
-            result[matches[index].season] = matchesWonPerTeam;
+            result[element.season] = matchesWonPerTeam;
         }
-    }
+    });
     return result;
 }
 
 //Function for count the Extra runs conceded per team in the year 2016
 function extraRunConcededPerTeamIn2016(matches, deliveries){
     let result = {};
-    let id = 0;
-    for (let index = 0; index < matches.length; index += 1){
-        if (matches[index].season == 2016){
-            id = matches[index].id;
-        }
-        for (let innerIndex = 0; innerIndex < deliveries.length; innerIndex += 1){
-            if (deliveries[innerIndex].match_id == id){
-                if (deliveries[innerIndex].bowling_team in result){
-                    result[deliveries[innerIndex].bowling_team] += Number(deliveries[innerIndex].extra_runs);
+    const matchesIn2016 = matches.filter(element => element.season == 2016);
+    matchesIn2016.forEach(element2016 => {
+        deliveries.forEach(element => {
+            if (element.match_id == element2016.id){
+                if (element.bowling_team in result){
+                    result[element.bowling_team] += Number(element.extra_runs);
                 }
                 else{
-                    result[deliveries[innerIndex].bowling_team] = Number(deliveries[innerIndex].extra_runs);
+                    result[element.bowling_team] = Number(element.extra_runs);
                 }
             }
-        }
-    }
+        });
+    });
     return result;
 }
 
@@ -60,44 +58,36 @@ function top10EconomicalBowlersIn2015(matches, deliveries){
     let result = [];
     let bowlersRuns = {};
     let bowlersNumberOfDeliveries = {};
-    let id = 0;
     let count = 0;
-    for (let index = 0; index < matches.length; index += 1){
-        if (matches[index].season == 2015){
-            id = matches[index].id;
-        }
-        for (let innerIndex = 0; innerIndex < deliveries.length; innerIndex += 1){
-            if (deliveries[innerIndex].match_id == id){
-                if (deliveries[innerIndex].bowler in bowlersRuns){
-                    bowlersRuns[deliveries[innerIndex].bowler] += Number(deliveries[innerIndex].total_runs);
+    const matchesIn2015 = matches.filter(element => element.season == 2015);
+    matchesIn2015.forEach(element2015 => {
+        deliveries.forEach(element => {
+            if (element.match_id == element2015.id){
+                if (element.bowler in bowlersRuns){
+                    bowlersRuns[element.bowler] += element.total_runs;
                 }
                 else{
-                    bowlersRuns[deliveries[innerIndex].bowler] = Number(deliveries[innerIndex].total_runs);
+                    bowlersRuns[element.bowler] = element.total_runs;
                 }
-                if (deliveries[innerIndex].bowler in bowlersNumberOfDeliveries && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
-                    bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] += 1;
+                if (element.bowler in bowlersNumberOfDeliveries && !(element.wide_runs) && !(element.noball_runs)){
+                    bowlersNumberOfDeliveries[element.bowler] += 1;
                 }
-                else if(!(deliveries[innerIndex].bowler in bowlersNumberOfDeliveries) && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
-                    bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] = 1;
-
+                else if (!(element.wide_runs) && !(element.noball_runs)){
+                    bowlersNumberOfDeliveries[element.bowler] = 1;
                 }
             }
-        }
-    }
-    for (let name in bowlersRuns){
-        bowlersRuns[name] = ((bowlersRuns[name]) / (bowlersNumberOfDeliveries[name] / 6).toFixed(2));    // bowlersNumberOfDeliveries[name] / 6 calculate number of overs
-    }
-    let sortedBowlersEconomy = Object.entries(bowlersRuns).sort((a,b) => a[1]-b[1]);
-    sortedBowlersEconomy = Object.fromEntries(sortedBowlersEconomy);
-    for (let name in sortedBowlersEconomy){
+        });
+    });
+    Object.keys(bowlersRuns).map(key => {
+        bowlersRuns[key] = (bowlersRuns[key] / (bowlersNumberOfDeliveries[key] / 6).toFixed(2)).toFixed(2); // (bowlersNumberOfDeliveries[key] / 6) calculate number of overs
+    });
+    let bowlersEconomy = Object.entries(bowlersRuns).sort((a,b) => a[1]-b[1]);
+    bowlersEconomy.forEach(element => {
         if (count <= 10){
-            result.push(name);
+            result.push(element[0]);
             count += 1;
         }
-        else{
-            break;
-        }
-    }
+    });
     return result;
 }
 
