@@ -57,7 +57,7 @@ function extraRunConcededPerTeamIn2016(matches, deliveries){
 
 //Function for get the Top 10 economical bowlers in the year 2015
 function top10EconomicalBowlersIn2015(matches, deliveries){
-    let result = [];
+    let result = {};
     let bowlersRuns = {};
     let bowlersNumberOfDeliveries = {};
     let id = 0;
@@ -74,10 +74,10 @@ function top10EconomicalBowlersIn2015(matches, deliveries){
                 else{
                     bowlersRuns[deliveries[innerIndex].bowler] = Number(deliveries[innerIndex].total_runs);
                 }
-                if (deliveries[innerIndex].bowler in bowlersNumberOfDeliveries && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
+                if (deliveries[innerIndex].bowler in bowlersNumberOfDeliveries && deliveries[innerIndex].wide_runs == 0 && deliveries[innerIndex].noball_runs == 0){
                     bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] += 1;
                 }
-                else if(!(deliveries[innerIndex].bowler in bowlersNumberOfDeliveries) && !(deliveries[innerIndex].wide_runs) && !(deliveries[innerIndex].noball_runs)){
+                else if(deliveries[innerIndex].wide_runs == 0 && deliveries[innerIndex].noball_runs == 0){
                     bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] = 1;
 
                 }
@@ -85,13 +85,13 @@ function top10EconomicalBowlersIn2015(matches, deliveries){
         }
     }
     for (let name in bowlersRuns){
-        bowlersRuns[name] = ((bowlersRuns[name]) / (bowlersNumberOfDeliveries[name] / 6).toFixed(2));    // bowlersNumberOfDeliveries[name] / 6 calculate number of overs
+        bowlersRuns[name] = (bowlersRuns[name] / (bowlersNumberOfDeliveries[name] / 6)).toFixed(2);    // bowlersNumberOfDeliveries[name] / 6 calculate number of overs
     }
     let sortedBowlersEconomy = Object.entries(bowlersRuns).sort((a,b) => a[1]-b[1]);
     sortedBowlersEconomy = Object.fromEntries(sortedBowlersEconomy);
     for (let name in sortedBowlersEconomy){
-        if (count <= 10){
-            result.push(name);
+        if (count < 10){
+            result[name] = sortedBowlersEconomy[name];
             count += 1;
         }
         else{
