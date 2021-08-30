@@ -18,6 +18,8 @@ $ npm install
 $ npm start
 ```
 
+After npm start visit this [localhost:8080](http://localhost:8080/src/public/) for result.
+
 The data is dumped into the output folder as separate JSON files.
 
 See the JSON files in the output folder for the result.
@@ -26,5 +28,3 @@ See the JSON files in the output folder for the result.
 - matchesWonPerTeamPerYear.json file contains the number of matches won by each team in each Year.
 - extraRunPerTeamIn2016.json file contains the number of extra runs conceded by each team in year 2016.
 - topEconomicalBowlersIn2015.json file contains top Economical Bowlers by the formula (total number of runs conceded by bowler / total number of overs bowl by bowler) in year 2015.
-
-For the Higher Order Function implementation in ipl.js functions checkout higherOrderFunction branch
