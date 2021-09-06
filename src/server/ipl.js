@@ -1,13 +1,9 @@
 // Function for count the Number of matches played per year for all the years in IPL.
 function numberOfMatchesPerYear(matches) {
     let result = {};
-    for (let index = 0; index < matches.length; index += 1) {
-        if (matches[index].season in result) {
-            result[matches[index].season] += 1;
-        } else {
-            result[matches[index].season] = 1;
-        }
-    }
+    matches.reduce((matchPerYear, {season}) => {
+        season in result ? result[season] += 1 : result[season] = 1;
+    });
     return result;
 }
 
@@ -15,43 +11,29 @@ function numberOfMatchesPerYear(matches) {
 function numberOfMatchesWonPerTeamPerYear(matches) {
     let result = {};
     let matchesWonPerTeam = {};
-    for (let index = 0; index < matches.length; index += 1) {
-        if (matches[index].season in result) {  
-            if (matches[index].winner in matchesWonPerTeam){ 
-                matchesWonPerTeam[matches[index].winner] += 1;
-            }
-            else{
-                matchesWonPerTeam[matches[index].winner] = 1;
-            }
-            result[matches[index].season] = matchesWonPerTeam;
-        }
-        else {
-            matchesWonPerTeam = {};
-            result[matches[index].season] = matchesWonPerTeam;
-        }
-    }
+    matches.reduce((matchPerYear, {season, winner}) => {
+        season in result ? 
+        winner in matchesWonPerTeam ? matchesWonPerTeam[winner] += 1
+        : winner ? matchesWonPerTeam[winner] = 1
+        : 
+        result[season] = matchesWonPerTeam
+        : matchesWonPerTeam = {};
+        result[season] = matchesWonPerTeam;
+    });
     return result;
 }
 
 //Function for count the Extra runs conceded per team in the year 2016
 function extraRunConcededPerTeamIn2016(matches, deliveries){
     let result = {};
-    let id = 0;
-    for (let index = 0; index < matches.length; index += 1){
-        if (matches[index].season == 2016){
-            id = matches[index].id;
-        }
-        for (let innerIndex = 0; innerIndex < deliveries.length; innerIndex += 1){
-            if (deliveries[innerIndex].match_id == id){
-                if (deliveries[innerIndex].bowling_team in result){
-                    result[deliveries[innerIndex].bowling_team] += Number(deliveries[innerIndex].extra_runs);
-                }
-                else{
-                    result[deliveries[innerIndex].bowling_team] = Number(deliveries[innerIndex].extra_runs);
-                }
-            }
-        }
-    }
+    matches.filter(({season}) => season == 2016)
+    .reduce((match2016, {id}) => {
+        deliveries.reduce((delivery, {match_id, extra_runs, bowling_team}) => {
+           match_id == id ? bowling_team in result ? result[bowling_team] += Number(extra_runs)
+            : result[bowling_team] = Number(extra_runs)
+            : {}; 
+        });
+    });
     return result;
 }
 
@@ -60,48 +42,32 @@ function top10EconomicalBowlersIn2015(matches, deliveries){
     let result = {};
     let bowlersRuns = {};
     let bowlersNumberOfDeliveries = {};
-    let id = 0;
     let count = 0;
-    for (let index = 0; index < matches.length; index += 1){
-        if (matches[index].season == 2015){
-            id = matches[index].id;
-        }
-        for (let innerIndex = 0; innerIndex < deliveries.length; innerIndex += 1){
-            if (deliveries[innerIndex].match_id == id){
-                if (deliveries[innerIndex].bowler in bowlersRuns){
-                    bowlersRuns[deliveries[innerIndex].bowler] += Number(deliveries[innerIndex].total_runs);
-                }
-                else{
-                    bowlersRuns[deliveries[innerIndex].bowler] = Number(deliveries[innerIndex].total_runs);
-                }
-                if (deliveries[innerIndex].bowler in bowlersNumberOfDeliveries && deliveries[innerIndex].wide_runs == 0 && deliveries[innerIndex].noball_runs == 0){
-                    bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] += 1;
-                }
-                else if(deliveries[innerIndex].wide_runs == 0 && deliveries[innerIndex].noball_runs == 0){
-                    bowlersNumberOfDeliveries[deliveries[innerIndex].bowler] = 1;
-
-                }
+    matches.filter(({season}) => season == 2015)
+    .reduce((match2016, {id}) => {
+        deliveries.reduce((delivery, {match_id, bowler, total_runs, wide_runs, noball_runs}) => {
+            if (match_id == id){
+                bowler in bowlersRuns ? bowlersRuns[bowler] += Number(total_runs) 
+                : bowlersRuns[bowler] = Number(total_runs)
+                bowler in bowlersNumberOfDeliveries && wide_runs == 0 && noball_runs == 0 ? bowlersNumberOfDeliveries[bowler] += 1
+                : wide_runs == 0 && noball_runs == 0 ? bowlersNumberOfDeliveries[bowler] = 1
+                : {};
             }
-        }
-    }
-    for (let name in bowlersRuns){
-        bowlersRuns[name] = (bowlersRuns[name] / (bowlersNumberOfDeliveries[name] / 6)).toFixed(2);    // bowlersNumberOfDeliveries[name] / 6 calculate number of overs
-    }
-    let sortedBowlersEconomy = Object.entries(bowlersRuns).sort((a,b) => a[1]-b[1]);
-    sortedBowlersEconomy = Object.fromEntries(sortedBowlersEconomy);
-    for (let name in sortedBowlersEconomy){
+        })
+    })
+
+    Object.keys(bowlersRuns).map(key => {
+        bowlersRuns[key] = (bowlersRuns[key] / (bowlersNumberOfDeliveries[key] / 6)).toFixed(2); // (bowlersNumberOfDeliveries[key] / 6) calculate number of overs
+    })
+    
+    Object.entries(bowlersRuns).sort((a,b) => a[1]-b[1])
+    .forEach(element => {
         if (count < 10){
-            result[name] = sortedBowlersEconomy[name];
+            result[element[0]] = element[1];
             count += 1;
         }
-        else{
-            break;
-        }
-    }
+    })
     return result;
 }
 
-module.exports.numberOfMatchesPerYear = numberOfMatchesPerYear;
-module.exports.numberOfMatchesWonPerTeamPerYear = numberOfMatchesWonPerTeamPerYear;
-module.exports.extraRunConcededPerTeamIn2016 = extraRunConcededPerTeamIn2016;
-module.exports.top10EconomicalBowlersIn2015 = top10EconomicalBowlersIn2015;
+module.exports = {numberOfMatchesPerYear, numberOfMatchesWonPerTeamPerYear, extraRunConcededPerTeamIn2016, top10EconomicalBowlersIn2015};

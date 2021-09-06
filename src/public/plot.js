@@ -67,7 +67,6 @@ function plotMatchesWonPerTeamPerYear(data){
     });
   }
   teamNamesDistinct = uniq(teamData);
-  teamNamesDistinct.pop();
 
   function collectData (data, teamNamesDistinct){
     let arr = [];
